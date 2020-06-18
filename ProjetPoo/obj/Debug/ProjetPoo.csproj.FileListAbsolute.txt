@@ -1,0 +1,9 @@
+C:\Users\Noumane agouzil\source\repos\ProjetPoo\ProjetPoo\bin\Debug\ProjetPoo.exe.config
+C:\Users\Noumane agouzil\source\repos\ProjetPoo\ProjetPoo\bin\Debug\ProjetPoo.exe
+C:\Users\Noumane agouzil\source\repos\ProjetPoo\ProjetPoo\bin\Debug\ProjetPoo.pdb
+C:\Users\Noumane agouzil\source\repos\ProjetPoo\ProjetPoo\obj\Debug\ProjetPoo.Form1.resources
+C:\Users\Noumane agouzil\source\repos\ProjetPoo\ProjetPoo\obj\Debug\ProjetPoo.Properties.Resources.resources
+C:\Users\Noumane agouzil\source\repos\ProjetPoo\ProjetPoo\obj\Debug\ProjetPoo.csproj.GenerateResource.cache
+C:\Users\Noumane agouzil\source\repos\ProjetPoo\ProjetPoo\obj\Debug\ProjetPoo.exe
+C:\Users\Noumane agouzil\source\repos\ProjetPoo\ProjetPoo\obj\Debug\ProjetPoo.pdb
+C:\Users\Noumane agouzil\source\repos\ProjetPoo\ProjetPoo\obj\Debug\ProjetPoo.csprojAssemblyReference.cache
