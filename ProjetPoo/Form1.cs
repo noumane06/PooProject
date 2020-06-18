@@ -17,7 +17,6 @@ namespace ProjetPoo
         private int scoreA = 0;
         private int scoreB = 0;
         bool verrou = true;
-        Graphics win;
         bool ok = true;
         public Form1()
         {
@@ -36,26 +35,21 @@ namespace ProjetPoo
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            // if (ok) { win = e.Graphics; ok = false; }
-
             board.dessiner(ref g);
         }
          
 
         private void mouseDown(object sender, MouseEventArgs e)
         {
-            string eventString = null;
-            int i, j;
-            Graphics g = this.CreateGraphics();
+           
+            Graphics g = CreateGraphics();
             Point p = e.Location;
             switch (e.Button)
             {
                 case MouseButtons.Left:
                     {
                          ok = false;
-                        eventString = "L";
                         int test = 0;
-                        // bool r = game.SeachRect(p, out i, out j);
                         if (verrou)
                         {
                             ok = this.board.PlayerA(ref g, p);
@@ -83,11 +77,10 @@ namespace ProjetPoo
 
                 case MouseButtons.Right:
                     {
-                        eventString = "R";
+
                          ok = true;
                         int test = 0;
-                        eventString = "L";
-                        // bool r = game.SeachRect(p, out i, out j);
+
                         if (!verrou)
                         {
                             ok = this.board.PlayerB(ref g, p);
@@ -121,6 +114,14 @@ namespace ProjetPoo
         private void button1_Click(object sender, EventArgs e)
         {
             board.ResetGame(this);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.scoreA = 0;
+            this.scoreB = 0;
+            label4.Text = this.scoreA.ToString();
+            label5.Text = this.scoreB.ToString();
         }
     }
 }

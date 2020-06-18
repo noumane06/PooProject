@@ -7,12 +7,16 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Media;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace ProjetPoo
 {
+
     class Board
     {
         Case[,] cases;
+        int check = 1;
         private List<string> resultsB = new List<string>();
         private List<string> resultsA = new List<string>();
         private int x = 0;
@@ -36,7 +40,7 @@ namespace ProjetPoo
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                     cases[i, j].reset();
-
+            x = 0;
             f.Refresh(); // redessiner
 
         }
@@ -49,6 +53,7 @@ namespace ProjetPoo
                     if (cases[i, j].checkPoint(p)) { ix = i; jy = j; return true; };
 
             return false;
+            
         }
         private void validatePlayerEntry()
         {
@@ -214,10 +219,14 @@ namespace ProjetPoo
             string tiedMessage = "Game tied";
             string caption = "Ending Game bye !";
             MessageBoxButtons buttons = MessageBoxButtons.OK;
+            // path for the json file 
+            var filePath = @Path.GetDirectoryName(Application.ExecutablePath) + "/resource/ResultsD.json";
+            // Read existing json data
+            var jsonData = File.ReadAllText(filePath);
+            // De-serialize to object
+            var resultDatas = JsonConvert.DeserializeObject<List<ResultData>>(jsonData)
+                                  ?? new List<ResultData>();
 
-
-            // Displays the MessageBox.
-            // result = MessageBox.Show(messageA, caption, buttons);
             int nWin = this.IsWinner();
 
             if (nWin == 1)
@@ -233,15 +242,32 @@ namespace ProjetPoo
                             string res = "case [" + a + "," + b + "]";
                             resultsA.Add(res);
                         }
+                        if (cases[a, b].PlayerB())
+                        {
+                            string res = "case [" + a + "," + b + "]";
+                            resultsB.Add(res);
+                        }
                     }
                 };
-                string messageA = string.Join(Environment.NewLine, resultsA) + "\nWIN !";
-                MessageBox.Show(messageA, caption, buttons);
-                this.ResetGame(f);
+                string mes = string.Join(Environment.NewLine, resultsA) + " Win !";
+                string messageB = string.Join(Environment.NewLine, resultsB) + " GameOver !";
+                resultDatas.Add(new ResultData()
+                {
+                    nameA = "playerA",
+                    resultsA = mes,
+                    nameB = "playerB",
+                    resultsB = messageB,
+                    DateTime = DateTime.Now
+                });
+                jsonData = JsonConvert.SerializeObject(resultDatas); File.WriteAllText(filePath, jsonData);
+                MessageBox.Show("Player A woon !!", caption, buttons);this.ResetGame(f);
+                resultsA.Clear();resultsB.Clear();
                 x = 0;
                 return 1;
             }
             else
+
+
                 if (nWin == -1) 
             {
                 SoundPlayer player = new SoundPlayer(ProjetPoo.Properties.Resources.winSound);
@@ -255,11 +281,26 @@ namespace ProjetPoo
                             string res = "case [" + a + "," + b + "]";
                             resultsB.Add(res);
                         }
+                        if (cases[a,b].PlayerA())
+                        {
+                            string res = "case [" + a + "," + b + "]";
+                            resultsA.Add(res);
+                        }
                     }
                 }
-                string messageB = string.Join(Environment.NewLine, resultsB) + "\nWIN !";
-                MessageBox.Show(messageB, caption, buttons);
-                this.ResetGame(f);
+                string mes = string.Join(Environment.NewLine, resultsA) + " Game Over !";
+                string messageB = string.Join(Environment.NewLine, resultsB) + " WIN !";
+                resultDatas.Add(new ResultData()
+                {
+                    nameA = "playerA",
+                    resultsA = mes,
+                    nameB = "playerB",
+                    resultsB = messageB,
+                    DateTime = DateTime.Now
+                });
+                jsonData = JsonConvert.SerializeObject(resultDatas);File.WriteAllText(filePath, jsonData);
+                MessageBox.Show("PlayerB wonn !!", caption, buttons);this.ResetGame(f);
+                resultsA.Clear();resultsB.Clear();
                 x = 0;
                 return -1;
             }
@@ -269,7 +310,7 @@ namespace ProjetPoo
             {
                 MessageBox.Show(tiedMessage, caption, buttons); this.ResetGame(f); return 0;
             }
-
+            check = 0;
             return 0;
 
         }

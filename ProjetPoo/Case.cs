@@ -11,8 +11,7 @@ namespace ProjetPoo
     {
         private Rectangle Rectangle;
         public int state;
-        private static readonly int specs = 100;
-        public bool playerAcheck;
+
         // Constructor 
         public Case(int tx , int ty , int specs)
         {
@@ -54,7 +53,7 @@ namespace ProjetPoo
                 Point p = new Point(Rectangle.X + 5, Rectangle.Y + 5);
                 g.DrawImage(newimage, p);
                 state = -1;
-                playerAcheck = false;
+                
                 
             }
         }
@@ -68,7 +67,7 @@ namespace ProjetPoo
                 Point p = new Point(Rectangle.X+5, Rectangle.Y+5);
                 g.DrawImage(newimage, p);
                 state = 1;
-                playerAcheck = true;
+                
             }
         }
 
