@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Media;
 
 namespace ProjetPoo
 {
     class Board
     {
         Case[,] cases;
+        private List<string> resultsB = new List<string>();
+        private List<string> resultsA = new List<string>();
+        private int x = 0;
         public Board(int specs , Point start )
         {
             cases = new Case[3, 3];
@@ -63,9 +67,11 @@ namespace ProjetPoo
         public bool PlayerB(ref Graphics g, Point p)
         {
             int i = -1, j = -1;
+            
             bool r = SeachRect(p, out i, out j); // check where the click occured if is inside the grille
             if (!r) { validatePlayerEntry(); return false; } // if not messagebox outside the box
             if (r) { cases[i, j].round(ref g); return true; } // pla begin
+            
             return true;
         }
         public bool PlayerA(ref Graphics g, Point p)
@@ -203,10 +209,9 @@ namespace ProjetPoo
 
             return 0;
         }
-        public bool CheckForGameOver(Form1 f)
+        public int CheckForGameOver(Form1 f)
         {
-            string messageA = "Player A Wins !";
-            string messageB = "Player B Wins !";
+            string tiedMessage = "Game tied";
             string caption = "Ending Game bye !";
             MessageBoxButtons buttons = MessageBoxButtons.OK;
 
@@ -214,17 +219,58 @@ namespace ProjetPoo
             // Displays the MessageBox.
             // result = MessageBox.Show(messageA, caption, buttons);
             int nWin = this.IsWinner();
+
             if (nWin == 1)
             {
+                SoundPlayer player = new SoundPlayer(ProjetPoo.Properties.Resources.winSound);
+                player.Play();
+                for (int a = 0; a < 3; a++)
+                {
+                    for (int b = 0; b < 3; b++)
+                    {
+                        if (cases[a, b].PlayerA())
+                        {
+                            string res = "case [" + a + "," + b + "]";
+                            resultsA.Add(res);
+                        }
+                    }
+                };
+                string messageA = string.Join(Environment.NewLine, resultsA) + "\nWIN !";
                 MessageBox.Show(messageA, caption, buttons);
                 this.ResetGame(f);
-                return true;
+                x = 0;
+                return 1;
             }
             else
-                if (nWin == -1) { MessageBox.Show(messageB, caption, buttons); this.ResetGame(f); return true; }
+                if (nWin == -1) 
+            {
+                SoundPlayer player = new SoundPlayer(ProjetPoo.Properties.Resources.winSound);
+                player.Play();
+                for (int a = 0; a < 3; a++)
+                {
+                    for (int b = 0; b < 3; b++)
+                    {
+                        if (cases[a, b].PlayerB())
+                        {
+                            string res = "case [" + a + "," + b + "]";
+                            resultsB.Add(res);
+                        }
+                    }
+                }
+                string messageB = string.Join(Environment.NewLine, resultsB) + "\nWIN !";
+                MessageBox.Show(messageB, caption, buttons);
+                this.ResetGame(f);
+                x = 0;
+                return -1;
+            }
             // en cas d'égalité à ajouter :)
+            this.x++;
+            if (x == 9)
+            {
+                MessageBox.Show(tiedMessage, caption, buttons); this.ResetGame(f); return 0;
+            }
 
-            return false;
+            return 0;
 
         }
 

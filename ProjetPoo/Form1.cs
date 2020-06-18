@@ -14,6 +14,8 @@ namespace ProjetPoo
     public partial class Form1 : Form
     {
         private Board board;
+        private int scoreA = 0;
+        private int scoreB = 0;
         bool verrou = true;
         Graphics win;
         bool ok = true;
@@ -26,8 +28,8 @@ namespace ProjetPoo
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*label4.Text = this.scoreA.ToString();
-            label5.Text = this.scoreB.ToString();*/
+            label4.Text = this.scoreA.ToString();
+            label5.Text = this.scoreB.ToString();
             
         }
 
@@ -38,7 +40,7 @@ namespace ProjetPoo
 
             board.dessiner(ref g);
         }
-   
+         
 
         private void mouseDown(object sender, MouseEventArgs e)
         {
@@ -52,14 +54,29 @@ namespace ProjetPoo
                     {
                          ok = false;
                         eventString = "L";
+                        int test = 0;
                         // bool r = game.SeachRect(p, out i, out j);
                         if (verrou)
                         {
                             ok = this.board.PlayerA(ref g, p);
                             if (ok) verrou = false;
+                             test = board.CheckForGameOver(this);
                         }
-                        bool test = board.CheckForGameOver(this);
-                        if (test) verrou = true;
+                         
+                        if (test == 1 || test == -1)
+                        {
+                            verrou = true;
+                            if (test == 1)
+                            {
+                                this.scoreA++;
+                                label4.Text = this.scoreA.ToString();
+                            }
+                            if (test == -1 )
+                            {
+                                this.scoreB++;
+                                label5.Text = this.scoreB.ToString();
+                            }
+                        }
                     }
 
                     break;
@@ -68,16 +85,31 @@ namespace ProjetPoo
                     {
                         eventString = "R";
                          ok = true;
+                        int test = 0;
                         eventString = "L";
                         // bool r = game.SeachRect(p, out i, out j);
                         if (!verrou)
                         {
                             ok = this.board.PlayerB(ref g, p);
-
+                            
+                            test = board.CheckForGameOver(this);
                             if (ok) verrou = true;
                         }
-                        bool test = board.CheckForGameOver(this);
-                        if (test) verrou = true;
+                         
+                        if (test == 1 || test == -1)
+                        {
+                            verrou = true;
+                            if (test == 1)
+                            {
+                                this.scoreA++;
+                                label4.Text = this.scoreA.ToString();
+                            }
+                            if (test == -1)
+                            {
+                                this.scoreB++;
+                                label5.Text = this.scoreB.ToString();
+                            }
+                        }
                     }
 
                     break;

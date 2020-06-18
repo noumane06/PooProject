@@ -10,8 +10,9 @@ namespace ProjetPoo
     class Case
     {
         private Rectangle Rectangle;
-        private int state;
+        public int state;
         private static readonly int specs = 100;
+        public bool playerAcheck;
         // Constructor 
         public Case(int tx , int ty , int specs)
         {
@@ -22,10 +23,16 @@ namespace ProjetPoo
         {
             this.state = 0;
         }
+       
         public bool PlayerA()
-        { return state == 1; }
+        {
+            if (state == 1) return true;
+            else return false;
+        }
         public bool PlayerB()
-        { return state == -1; }
+        {
+            
+            return state == -1; }
         // checking if point is in rectangle 
         public bool checkPoint(Point point)
         {
@@ -39,33 +46,29 @@ namespace ProjetPoo
         }
         public void round(ref Graphics g)
         {
+            
             if (state == 0 )
             {
-                Pen stylo = new Pen(Color.DarkSlateBlue, 15);
-                 Brush s = new SolidBrush(Color.Gold);
-                 g.FillEllipse(s, Rectangle);
-                 g.DrawEllipse(stylo, Rectangle);
-                /*Image newimage = Image.FromFile("C:/Users/Noumane agouzil/Desktop/jerry.png");
-                Point p = new Point(Rectangle.X + 5, Rectangle.Y + 5);
-                g.DrawImage(newimage, p);*/
                 
-
+                Image newimage = ProjetPoo.Properties.Resources.jerry;
+                Point p = new Point(Rectangle.X + 5, Rectangle.Y + 5);
+                g.DrawImage(newimage, p);
+                state = -1;
+                playerAcheck = false;
+                
             }
         }
         public void Croix(ref Graphics g)
         {
-            // Graphics g = p.Graphics;
-
+            
             if (state == 0)
             {
-                /*Pen s = new Pen(Color.Red, 20);
-                g.DrawLine(s, Rectangle.Left, Rectangle.Top, Rectangle.Right, Rectangle.Bottom);
-                g.DrawLine(s, Rectangle.Left, Rectangle.Bottom, Rectangle.Right, Rectangle.Top);
-                state = 1;*/
-                Image newimage = Image.FromFile("C:/Users/Noumane agouzil/Desktop/tom.png");
+                
+                Image newimage = ProjetPoo.Properties.Resources.tom;
                 Point p = new Point(Rectangle.X+5, Rectangle.Y+5);
                 g.DrawImage(newimage, p);
                 state = 1;
+                playerAcheck = true;
             }
         }
 
