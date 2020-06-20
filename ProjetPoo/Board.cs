@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Media;
 using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ProjetPoo
 {
@@ -16,7 +17,6 @@ namespace ProjetPoo
     class Board
     {
         Case[,] cases;
-        int check = 1;
         private List<string> resultsB = new List<string>();
         private List<string> resultsA = new List<string>();
         private int x = 0;
@@ -219,13 +219,6 @@ namespace ProjetPoo
             string tiedMessage = "Game tied";
             string caption = "Ending Game bye !";
             MessageBoxButtons buttons = MessageBoxButtons.OK;
-            // path for the json file 
-            var filePath = @Path.GetDirectoryName(Application.ExecutablePath) + "/resource/ResultsD.json";
-            // Read existing json data
-            var jsonData = File.ReadAllText(filePath);
-            // De-serialize to object
-            var resultDatas = JsonConvert.DeserializeObject<List<ResultData>>(jsonData)
-                                  ?? new List<ResultData>();
 
             int nWin = this.IsWinner();
 
@@ -249,26 +242,39 @@ namespace ProjetPoo
                         }
                     }
                 };
+
                 string mes = string.Join(Environment.NewLine, resultsA) + " Win !";
                 string messageB = string.Join(Environment.NewLine, resultsB) + " GameOver !";
-                resultDatas.Add(new ResultData()
+                mes = mes.Replace("\r\n", " | ");
+                messageB = messageB.Replace("\r\n", " | ");
+                var filePath = @Path.GetDirectoryName(Application.ExecutablePath) + "/resource/ResultsD.json";
+                var initialJson = File.ReadAllText(filePath);
+                if (initialJson == "")
                 {
-                    nameA = "playerA",
-                    resultsA = mes,
-                    nameB = "playerB",
-                    resultsB = messageB,
-                    DateTime = DateTime.Now
-                });
-                jsonData = JsonConvert.SerializeObject(resultDatas); File.WriteAllText(filePath, jsonData);
-                MessageBox.Show("Player A woon !!", caption, buttons);this.ResetGame(f);
-                resultsA.Clear();resultsB.Clear();
+                    initialJson = "[]";
+                }
+
+                var array = JArray.Parse(initialJson);
+
+                var itemToAdd = new JObject();
+                itemToAdd["Name 1"] = "PlayerA";
+                itemToAdd["Results 1"] = mes;
+                itemToAdd["Name 2"] = "PlayerB";
+                itemToAdd["Results 2"] = messageB;
+                itemToAdd["Date"] = DateTime.Now;
+                array.Add(itemToAdd);
+                var jsonToOutput = JsonConvert.SerializeObject(array, Formatting.Indented);
+                File.WriteAllText(filePath, jsonToOutput);
+                MessageBox.Show("Player A woon !!", caption, buttons);
+                this.ResetGame(f);
+                resultsA.Clear(); resultsB.Clear();
                 x = 0;
                 return 1;
             }
             else
 
 
-                if (nWin == -1) 
+                if (nWin == -1)
             {
                 SoundPlayer player = new SoundPlayer(ProjetPoo.Properties.Resources.winSound);
                 player.Play();
@@ -281,7 +287,7 @@ namespace ProjetPoo
                             string res = "case [" + a + "," + b + "]";
                             resultsB.Add(res);
                         }
-                        if (cases[a,b].PlayerA())
+                        if (cases[a, b].PlayerA())
                         {
                             string res = "case [" + a + "," + b + "]";
                             resultsA.Add(res);
@@ -290,17 +296,28 @@ namespace ProjetPoo
                 }
                 string mes = string.Join(Environment.NewLine, resultsA) + " Game Over !";
                 string messageB = string.Join(Environment.NewLine, resultsB) + " WIN !";
-                resultDatas.Add(new ResultData()
+                mes = mes.Replace("\r\n", " | ");
+                messageB = messageB.Replace("\r\n", " | ");
+                var filePath = @Path.GetDirectoryName(Application.ExecutablePath) + "/resource/ResultsD.json";
+                var initialJson = File.ReadAllText(filePath);
+                if (initialJson == "")
                 {
-                    nameA = "playerA",
-                    resultsA = mes,
-                    nameB = "playerB",
-                    resultsB = messageB,
-                    DateTime = DateTime.Now
-                });
-                jsonData = JsonConvert.SerializeObject(resultDatas);File.WriteAllText(filePath, jsonData);
-                MessageBox.Show("PlayerB wonn !!", caption, buttons);this.ResetGame(f);
-                resultsA.Clear();resultsB.Clear();
+                    initialJson = "[]";
+                }
+
+                var array = JArray.Parse(initialJson);
+
+                var itemToAdd = new JObject();
+                itemToAdd["Name 1"] = "PlayerA";
+                itemToAdd["Results 1"] = mes;
+                itemToAdd["Name 2"] = "PlayerB";
+                itemToAdd["Results 2"] = messageB;
+                itemToAdd["Date"] = DateTime.Now;
+                array.Add(itemToAdd);
+                var jsonToOutput = JsonConvert.SerializeObject(array, Formatting.Indented);
+                File.WriteAllText(filePath, jsonToOutput);
+                MessageBox.Show("PlayerB wonn !!", caption, buttons); this.ResetGame(f);
+                resultsA.Clear(); resultsB.Clear();
                 x = 0;
                 return -1;
             }
@@ -310,7 +327,7 @@ namespace ProjetPoo
             {
                 MessageBox.Show(tiedMessage, caption, buttons); this.ResetGame(f); return 0;
             }
-            check = 0;
+
             return 0;
 
         }

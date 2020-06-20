@@ -10,7 +10,7 @@ namespace ProjetPoo
     class Case
     {
         private Rectangle Rectangle;
-        public int state;
+        private int state;
 
         // Constructor 
         public Case(int tx , int ty , int specs)
